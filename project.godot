@@ -12,8 +12,13 @@ config_version=5
 
 config/name="Juego Reto"
 config/features=PackedStringArray("4.2", "Mobile")
+boot_splash/show_image=false
 config/icon="res://icon.svg"
+
+[autoload]
+
+GLOBAL="*res://scenes/global.tscn"
 
 [rendering]
 
-renderer/rendering_method="mobile"
+textures/canvas_textures/default_texture_filter=0

@@ -1,0 +1,82 @@
+[gd_scene load_steps=12 format=3 uid="uid://x6igvrebeg14"]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_yagjb"]
+[ext_resource type="Texture2D" uid="uid://bfo6t063lig1h" path="res://assets/kenney_platformer-art-extended-enemies/Alien sprites/alienYellow_climb1.png" id="2_secoc"]
+[ext_resource type="Texture2D" uid="uid://b5yec7npjs6pe" path="res://assets/kenney_platformer-art-extended-enemies/Alien sprites/alienYellow_climb2.png" id="3_841xc"]
+[ext_resource type="Texture2D" uid="uid://blbb52ap6m1ih" path="res://assets/kenney_platformer-art-extended-enemies/Alien sprites/alienYellow_stand.png" id="4_su5x1"]
+[ext_resource type="Texture2D" uid="uid://c4blvnoloc16" path="res://assets/kenney_platformer-art-extended-enemies/Alien sprites/alienYellow_jump.png" id="5_a6hcm"]
+[ext_resource type="Texture2D" uid="uid://vl23rgqkoeub" path="res://assets/kenney_platformer-art-extended-enemies/Alien sprites/alienYellow_hurt.png" id="6_gbv64"]
+[ext_resource type="Texture2D" uid="uid://bq3ay5fxh8tnc" path="res://assets/kenney_platformer-art-extended-enemies/Alien sprites/alienYellow_duck.png" id="7_snhrv"]
+[ext_resource type="Texture2D" uid="uid://dn8dbdrt3o5eg" path="res://assets/kenney_platformer-art-extended-enemies/Alien sprites/alienYellow_walk1.png" id="8_5aelv"]
+[ext_resource type="Texture2D" uid="uid://cug4m4yc48ypc" path="res://assets/kenney_platformer-art-extended-enemies/Alien sprites/alienYellow_walk2.png" id="9_uq65u"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_te6je"]
+radius = 22.0
+height = 76.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_abf36"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_secoc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_841xc")
+}],
+"loop": true,
+"name": &"climb",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_su5x1")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_su5x1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_a6hcm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_gbv64")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_snhrv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_su5x1")
+}],
+"loop": false,
+"name": &"jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_5aelv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_uq65u")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[node name="player" type="CharacterBody2D"]
+script = ExtResource("1_yagjb")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 5)
+shape = SubResource("CapsuleShape2D_te6je")
+
+[node name="allien" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_abf36")
+animation = &"climb"
+autoplay = "idle"
+frame = 1
+frame_progress = 0.539864
