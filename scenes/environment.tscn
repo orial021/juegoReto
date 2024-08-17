@@ -552,6 +552,12 @@ position = Vector2(1803, 400)
 [node name="enemy5" parent="Enemies" instance=ExtResource("10_88lvd")]
 position = Vector2(451, 201)
 
+[node name="enemy6" parent="Enemies" instance=ExtResource("10_88lvd")]
+position = Vector2(1309, 55)
+
+[node name="enemy7" parent="Enemies" instance=ExtResource("10_88lvd")]
+position = Vector2(2149, 267)
+
 [node name="Player" parent="." node_paths=PackedStringArray("gui") instance=ExtResource("12_5p5a1")]
 position = Vector2(93, 557)
 gui = NodePath("../GUI")
