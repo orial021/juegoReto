@@ -1,14 +1,20 @@
-[gd_scene load_steps=13 format=3 uid="uid://x6igvrebeg14"]
+[gd_scene load_steps=20 format=3 uid="uid://x6igvrebeg14"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_yagjb"]
+[ext_resource type="PackedScene" uid="uid://b1q3nbj37x70o" path="res://scenes/shot.tscn" id="2_o8j77"]
 [ext_resource type="Texture2D" uid="uid://bfo6t063lig1h" path="res://assets/kenney_platformer-art-extended-enemies/Alien sprites/alienYellow_climb1.png" id="2_secoc"]
 [ext_resource type="Texture2D" uid="uid://b5yec7npjs6pe" path="res://assets/kenney_platformer-art-extended-enemies/Alien sprites/alienYellow_climb2.png" id="3_841xc"]
+[ext_resource type="Texture2D" uid="uid://cytp0fjad6cxv" path="res://assets/kenney_platformer-art-extended-enemies/Alien sprites/alienYellow.png" id="4_4di8c"]
 [ext_resource type="Texture2D" uid="uid://blbb52ap6m1ih" path="res://assets/kenney_platformer-art-extended-enemies/Alien sprites/alienYellow_stand.png" id="4_su5x1"]
 [ext_resource type="Texture2D" uid="uid://c4blvnoloc16" path="res://assets/kenney_platformer-art-extended-enemies/Alien sprites/alienYellow_jump.png" id="5_a6hcm"]
+[ext_resource type="Texture2D" uid="uid://c78o2x1fxc8vp" path="res://assets/kenney_platformer-art-extended-enemies/Alien sprites/alienYellow_badge1.png" id="5_i8t0j"]
+[ext_resource type="Texture2D" uid="uid://ficck1qkvw2a" path="res://assets/kenney_platformer-art-extended-enemies/Alien sprites/alienYellow_badge2.png" id="6_27ahl"]
 [ext_resource type="Texture2D" uid="uid://vl23rgqkoeub" path="res://assets/kenney_platformer-art-extended-enemies/Alien sprites/alienYellow_hurt.png" id="6_gbv64"]
 [ext_resource type="Texture2D" uid="uid://bq3ay5fxh8tnc" path="res://assets/kenney_platformer-art-extended-enemies/Alien sprites/alienYellow_duck.png" id="7_snhrv"]
 [ext_resource type="Texture2D" uid="uid://dn8dbdrt3o5eg" path="res://assets/kenney_platformer-art-extended-enemies/Alien sprites/alienYellow_walk1.png" id="8_5aelv"]
 [ext_resource type="Texture2D" uid="uid://cug4m4yc48ypc" path="res://assets/kenney_platformer-art-extended-enemies/Alien sprites/alienYellow_walk2.png" id="9_uq65u"]
+[ext_resource type="Texture2D" uid="uid://vcgcixhmrl5v" path="res://assets/Objects/bullet/flash.png" id="13_xelog"]
+[ext_resource type="AudioStream" uid="uid://b5irn21v5tbkg" path="res://assets/audio/shot 1.wav" id="14_7k1op"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_abf36"]
 animations = [{
@@ -21,6 +27,23 @@ animations = [{
 }],
 "loop": true,
 "name": &"climb",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_4di8c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_i8t0j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_27ahl")
+}, {
+"duration": 1.0,
+"texture": null
+}],
+"loop": false,
+"name": &"death",
 "speed": 5.0
 }, {
 "frames": [{
@@ -67,6 +90,20 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="SpriteFrames" id="SpriteFrames_k154l"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("13_xelog")
+}, {
+"duration": 1.0,
+"texture": null
+}],
+"loop": false,
+"name": &"fire",
+"speed": 5.0
+}]
+
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_te6je"]
 radius = 22.0
 height = 76.0
@@ -74,20 +111,42 @@ height = 76.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_nhyb2"]
 radius = 22.0227
 
-[node name="player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D"]
+collision_mask = 63
+platform_floor_layers = 4294967044
+platform_wall_layers = 36
 script = ExtResource("1_yagjb")
+shoot = ExtResource("2_o8j77")
 
 [node name="allien" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_abf36")
-animation = &"climb"
-frame_progress = 0.658186
+animation = &"idle"
+autoplay = "idle"
+
+[node name="Marker2D" type="Marker2D" parent="allien"]
+position = Vector2(97, 1)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="allien"]
+position = Vector2(51, 3)
+scale = Vector2(2.5, 2.5)
+sprite_frames = SubResource("SpriteFrames_k154l")
+animation = &"fire"
+autoplay = "fire"
 
 [node name="CollisionShapePlayer" type="CollisionShape2D" parent="."]
-position = Vector2(0, 1)
 shape = SubResource("CapsuleShape2D_te6je")
 
 [node name="Area2D" type="Area2D" parent="."]
+position = Vector2(-1, 1)
+collision_mask = 38
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 position = Vector2(1, 16)
 shape = SubResource("CircleShape2D_nhyb2")
+
+[node name="audio_fire" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("14_7k1op")
+area_mask = 4
+
+[connection signal="animation_finished" from="allien" to="." method="_on_allien_animation_finished"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

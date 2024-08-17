@@ -1,60 +1,134 @@
 extends CharacterBody2D
 class_name Player
 
-var speed : float = 80
-var jump_force : float = -110
+
 var is_on_ground : bool = false
 var is_climbing : bool = false
+var death : bool = false
+
+
+@export_category("Config")
+@export_group("Required references")
+@export var gui : CanvasLayer
+@export var shoot : PackedScene
+
+
+@export_group("Motion")
+@export var speed : int = 128
+@export var gravity : int = 16
+@export var jump_force : int = 450
+
 
 
 func _process(_delta) -> void:
 	is_on_ground = is_on_floor()
-	motion_ctrl()
-	anim_ctrl()
-	if GLOBAL.can_climb == true :
-		climb()
-	
-	
-func climb() -> void :
-	if Input.is_action_pressed("ui_up") or Input.is_action_pressed("ui_down"):
-		is_climbing = true
-		velocity.y = GLOBAL.get_axis().y * -speed
-		$allien.play("climb")
-	else:
+	match death:
+		true:
+			death_ctrl()
+			$allien.play("death")
+		false:
+			motion_ctrl()
+	if velocity.y >= 2000:
+		gui.game_over()
+	if not GLOBAL.can_climb:
 		is_climbing = false
-		velocity.y = 0
+		
+func _input(event):
+	if not death and is_on_ground and event.is_action_pressed("ui_accept"):
+		jump_ctrl(1)
+	if event.is_action_pressed("ui_select"):
+		shoot_ctrl()
+		
 
-func _physics_process(delta):
-	if Input.is_action_pressed("ui_accept") and is_on_ground:
-		velocity.y = jump_force
-		$allien.play("jump_up")
-	if not is_on_ground and not is_climbing:
-		velocity.y += GLOBAL.gravity * delta
-	move_and_slide()
+func shoot_ctrl():
+	$allien/AnimatedSprite2D.play("fire")
+	$audio_fire.play()
+	var shoot_instance = shoot.instantiate()
+	shoot_instance.global_position = $allien/Marker2D.global_position
+	shoot_instance.scale.x = GLOBAL.direction
+	shoot_instance.direction = Vector2(GLOBAL.direction, 0)
+	get_tree().call_group("Environment", "add_child", shoot_instance)
+
+
+func jump_ctrl(power: float) -> void:
+	velocity.y = -jump_force * power
+	
 	
 func motion_ctrl() -> void:
+	#movimiento
+	if GLOBAL.can_climb and GLOBAL.get_axis().y != 0:
+		climb()
+	elif not GLOBAL.get_axis().x == 0:
+		$allien.scale.x = GLOBAL.get_axis().x
+			
 	velocity.x = GLOBAL.get_axis().x * speed
+	velocity.y += gravity
 	if not is_on_ground :
+		pass
 		velocity.x = velocity.x / 2
+	move_and_slide()
 	
 	
-func anim_ctrl():
-	if GLOBAL.get_axis().x == 0 and is_on_ground:
-		$allien.play("idle")
-	elif GLOBAL.get_axis().x > 0 and is_on_ground:
-		$allien.flip_h = false
-		$allien.play("walk")
-	elif GLOBAL.get_axis().x < 0 and is_on_ground:
-		$allien.flip_h = true
-		$allien.play("walk")
-	elif velocity.y < 0 and not is_on_ground:
-		$allien.play("jump_up")
-	elif velocity.y > 0 and not is_on_ground:
-		$allien.play("jump_down")
-		if is_on_ground:
-			landing()
+	#animaciones
+	match GLOBAL.can_climb and is_climbing:
+		false:
+			match is_on_ground:
+				true:
+					if not GLOBAL.get_axis().x == 0:
+						$allien.set_animation("walk")
+						$allien.play()
+					else:
+						$allien.set_animation("idle")
+				false:
+					if velocity.y < 0:
+						$allien.set_animation("jump_up")
+					else:
+						$allien.set_animation("jump_down")
+						if is_on_ground:
+							landing()
+		true:
+			match GLOBAL.get_axis().x != 0:
+				true:
+					$allien.play('walk')
+				false:
+					if GLOBAL.get_axis().y != 0:
+						$allien.set_animation("climb")
+						$allien.play()
+					elif GLOBAL.get_axis().y == 0:
+						$allien.stop()
+			
+			
+func climb():
+	# Climbing logic
+	is_climbing = true
+	velocity.y = GLOBAL.get_axis().y * -speed
+	move_and_slide()
 
 
 func landing():
-	$allien.play("landing")
+	$allien.set_animation("landing")
 	
+func damage_ctrl():
+	GLOBAL.health -= 1
+	if GLOBAL.health <= 0:
+		death = true
+		$allien.set_animation("death")
+	
+
+func _on_area_2d_body_entered(body):
+	pass
+	#if body is Enemy and velocity.y >= 0:
+		#body.damage_ctrl(1)
+		#jump_ctrl(0.75)
+	
+
+func death_ctrl():
+	velocity.x = 0
+	velocity.y += gravity
+	move_and_slide()
+
+
+func _on_allien_animation_finished():
+	if $allien.animation == "death":
+		gui.game_over()
+

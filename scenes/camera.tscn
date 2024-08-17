@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://dfnteemsgp66g"]
+
+[ext_resource type="Script" path="res://scripts/Camera.gd" id="1_0iw5j"]
+
+[node name="Camera" type="Camera2D"]
+position = Vector2(-1, 0)
+zoom = Vector2(1.5, 1.5)
+position_smoothing_enabled = true
+drag_vertical_enabled = true
+drag_top_margin = 1.0
+drag_bottom_margin = 0.0
+editor_draw_limits = true
+editor_draw_drag_margin = true
+script = ExtResource("1_0iw5j")

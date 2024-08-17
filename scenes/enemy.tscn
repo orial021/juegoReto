@@ -1,0 +1,79 @@
+[gd_scene load_steps=9 format=3 uid="uid://b4nw8jsjaye70"]
+
+[ext_resource type="Script" path="res://scripts/enemy.gd" id="1_iw6ec"]
+[ext_resource type="Texture2D" uid="uid://bm8i8ut6rtutr" path="res://assets/kenney_platformer-art-extended-enemies/Enemy sprites/bee.png" id="2_iwkeq"]
+[ext_resource type="Texture2D" uid="uid://s46877x2lf30" path="res://assets/kenney_platformer-art-extended-enemies/Enemy sprites/bee_dead.png" id="3_fwt5m"]
+[ext_resource type="Texture2D" uid="uid://ibi1drc7wdkf" path="res://assets/kenney_platformer-art-extended-enemies/Enemy sprites/bee_hit.png" id="4_o8d43"]
+[ext_resource type="Texture2D" uid="uid://bgs3dohdr0mkb" path="res://assets/kenney_platformer-art-extended-enemies/Enemy sprites/bee_fly.png" id="5_vqs5x"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_qao7s"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_iwkeq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_fwt5m")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_o8d43")
+}, {
+"duration": 1.0,
+"texture": null
+}],
+"loop": false,
+"name": &"death",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_iwkeq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_vqs5x")
+}],
+"loop": true,
+"name": &"worm",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_iag2a"]
+radius = 23.0
+height = 46.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_03v8f"]
+radius = 16.0
+height = 78.0
+
+[node name="enemy" type="CharacterBody2D" groups=["Enemy"]]
+collision_layer = 2
+collision_mask = 7
+platform_floor_layers = 4294967044
+platform_wall_layers = 4
+script = ExtResource("1_iw6ec")
+speed = 50
+
+[node name="sprite" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_qao7s")
+animation = &"death"
+autoplay = "worm"
+
+[node name="AreaDamage" type="Area2D" parent="sprite"]
+position = Vector2(69, -8)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="sprite/AreaDamage"]
+position = Vector2(-71, 12)
+shape = SubResource("CapsuleShape2D_iag2a")
+
+[node name="RayCast2D" type="RayCast2D" parent="sprite"]
+position = Vector2(-9, 3)
+target_position = Vector2(0, 57)
+collision_mask = 4
+collide_with_areas = true
+
+[node name="Collision" type="CollisionShape2D" parent="."]
+position = Vector2(-3, 11)
+shape = SubResource("CapsuleShape2D_03v8f")
+
+[connection signal="animation_finished" from="sprite" to="." method="_on_sprite_animation_finished"]
+[connection signal="body_entered" from="sprite/AreaDamage" to="." method="_on_area_damage_body_entered"]
