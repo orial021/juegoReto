@@ -4,3 +4,7 @@
 
 [node name="global" type="Node2D"]
 script = ExtResource("1_c1bva")
+
+[node name="HTTPUpdate" type="HTTPRequest" parent="."]
+
+[connection signal="request_completed" from="HTTPUpdate" to="." method="_on_http_update_request_completed"]

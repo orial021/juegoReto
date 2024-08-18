@@ -113,9 +113,10 @@ func damage_ctrl():
 	if GLOBAL.health <= 0:
 		death = true
 		$allien.set_animation("death")
+	GLOBAL.update_data()
 	
 
-func _on_area_2d_body_entered(body):
+func _on_area_2d_body_entered(_body):
 	pass
 	#if body is Enemy and velocity.y >= 0:
 		#body.damage_ctrl(1)

@@ -39,6 +39,7 @@ func damage_ctrl(damage):
 		GLOBAL.score += score
 		if GLOBAL.score >= 1000:
 			GLOBAL.new_life()
+	GLOBAL.update_data()
 		
 func _on_sprite_animation_finished():
 	if $sprite.animation == "death":
