@@ -6,7 +6,7 @@ var moving = 0
 func _ready():
 	get_tree().paused = false
 	GLOBAL.can_climb = false
-	$Player.global_position = parse_vector2(GLOBAL.user_position)
+	#$Player.global_position = parse_vector2(GLOBAL.user_position)
 	
 	
 
@@ -15,7 +15,7 @@ func _process(delta) -> void:
 	parallax_bg(delta)
 	$Node2D/Path2D/PathFollow2D.set_progress($Node2D/Path2D/PathFollow2D.get_progress() + 80 * delta)
 	
-	
+
 func parallax_bg(delta_time) -> void:
 	$sky.scroll_base_offset -= Vector2(1, 0) * 40 * delta_time
 	$far_cloud.scroll_base_offset -= Vector2(1, 0) * 80 * delta_time

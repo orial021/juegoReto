@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://b4nw8jsjaye70"]
+[gd_scene load_steps=10 format=3 uid="uid://b4nw8jsjaye70"]
 
 [ext_resource type="Script" path="res://scripts/enemy.gd" id="1_iw6ec"]
 [ext_resource type="Texture2D" uid="uid://bm8i8ut6rtutr" path="res://assets/kenney_platformer-art-extended-enemies/Enemy sprites/bee.png" id="2_iwkeq"]
 [ext_resource type="Texture2D" uid="uid://s46877x2lf30" path="res://assets/kenney_platformer-art-extended-enemies/Enemy sprites/bee_dead.png" id="3_fwt5m"]
 [ext_resource type="Texture2D" uid="uid://ibi1drc7wdkf" path="res://assets/kenney_platformer-art-extended-enemies/Enemy sprites/bee_hit.png" id="4_o8d43"]
 [ext_resource type="Texture2D" uid="uid://bgs3dohdr0mkb" path="res://assets/kenney_platformer-art-extended-enemies/Enemy sprites/bee_fly.png" id="5_vqs5x"]
+[ext_resource type="AudioStream" uid="uid://qxabxokwbqcq" path="res://assets/audio/hit.wav" id="6_w73ac"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_qao7s"]
 animations = [{
@@ -74,6 +75,11 @@ collide_with_areas = true
 [node name="Collision" type="CollisionShape2D" parent="."]
 position = Vector2(-3, 11)
 shape = SubResource("CapsuleShape2D_03v8f")
+
+[node name="Settings" type="Node" parent="."]
+
+[node name="AudioHit" type="AudioStreamPlayer2D" parent="Settings"]
+stream = ExtResource("6_w73ac")
 
 [connection signal="animation_finished" from="sprite" to="." method="_on_sprite_animation_finished"]
 [connection signal="body_entered" from="sprite/AreaDamage" to="." method="_on_area_damage_body_entered"]

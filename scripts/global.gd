@@ -12,6 +12,8 @@ var user_id : String
 var username : String
 var headers = PackedStringArray()
 var host : String = "http://localhost:8000"
+#"https://206.189.176.123:7500"
+#"http://localhost:8000"
 var endpointUpdate : String
 
 @onready var httpUpdate = $HTTPUpdate

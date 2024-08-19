@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://x6igvrebeg14"]
+[gd_scene load_steps=25 format=3 uid="uid://x6igvrebeg14"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_yagjb"]
 [ext_resource type="PackedScene" uid="uid://b1q3nbj37x70o" path="res://scenes/shot.tscn" id="2_o8j77"]
@@ -15,6 +15,10 @@
 [ext_resource type="Texture2D" uid="uid://cug4m4yc48ypc" path="res://assets/kenney_platformer-art-extended-enemies/Alien sprites/alienYellow_walk2.png" id="9_uq65u"]
 [ext_resource type="Texture2D" uid="uid://vcgcixhmrl5v" path="res://assets/Objects/bullet/flash.png" id="13_xelog"]
 [ext_resource type="AudioStream" uid="uid://b5irn21v5tbkg" path="res://assets/audio/shot 1.wav" id="14_7k1op"]
+[ext_resource type="AudioStream" uid="uid://gtv7v4dn2wln" path="res://assets/audio/Hit damage 1.wav" id="16_wuefs"]
+[ext_resource type="AudioStream" uid="uid://x8wulv1in2i2" path="res://assets/audio/walking-cartoon.mp3" id="17_cyakc"]
+[ext_resource type="AudioStream" uid="uid://bd5dybufele7a" path="res://assets/audio/Balloon start riding 1.wav" id="18_ghluu"]
+[ext_resource type="Texture2D" uid="uid://lbmsoe65qse0" path="res://assets/Objects/bullet/crosshair138.png" id="19_8dpey"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_abf36"]
 animations = [{
@@ -111,6 +115,9 @@ height = 76.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_nhyb2"]
 radius = 22.0227
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_bkexm"]
+radius = 17.72
+
 [node name="Player" type="CharacterBody2D"]
 collision_mask = 63
 platform_floor_layers = 4294967044
@@ -124,7 +131,7 @@ animation = &"idle"
 autoplay = "idle"
 
 [node name="Marker2D" type="Marker2D" parent="allien"]
-position = Vector2(97, 1)
+position = Vector2(43, 0)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="allien"]
 position = Vector2(51, 3)
@@ -132,6 +139,27 @@ scale = Vector2(2.5, 2.5)
 sprite_frames = SubResource("SpriteFrames_k154l")
 animation = &"fire"
 autoplay = "fire"
+
+[node name="settings" type="Node" parent="allien"]
+
+[node name="audio_fire" type="AudioStreamPlayer2D" parent="allien/settings"]
+stream = ExtResource("14_7k1op")
+volume_db = -10.0
+area_mask = 63
+
+[node name="Audio_dmg" type="AudioStreamPlayer2D" parent="allien/settings"]
+stream = ExtResource("16_wuefs")
+
+[node name="Audio_fstps" type="AudioStreamPlayer2D" parent="allien/settings"]
+stream = ExtResource("17_cyakc")
+max_distance = 5000.0
+max_polyphony = 5
+area_mask = 63
+
+[node name="Audio_jump" type="AudioStreamPlayer2D" parent="allien/settings"]
+stream = ExtResource("18_ghluu")
+
+[node name="Timer" type="Timer" parent="allien/settings"]
 
 [node name="CollisionShapePlayer" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_te6je")
@@ -144,9 +172,18 @@ collision_mask = 38
 position = Vector2(1, 16)
 shape = SubResource("CircleShape2D_nhyb2")
 
-[node name="audio_fire" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("14_7k1op")
-area_mask = 4
+[node name="shotSpawn" type="Area2D" parent="."]
+collision_mask = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="shotSpawn"]
+position = Vector2(148.6, 0.6)
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("19_8dpey")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="shotSpawn"]
+position = Vector2(148.6, 0.6)
+shape = SubResource("CircleShape2D_bkexm")
 
 [connection signal="animation_finished" from="allien" to="." method="_on_allien_animation_finished"]
+[connection signal="timeout" from="allien/settings/Timer" to="." method="_on_timer_timeout"]
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

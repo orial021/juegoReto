@@ -12,7 +12,31 @@ var json = JSON.new()
 func _ready():
 	$ColorRect/username.grab_focus()
 	$ColorRect/greetings.visible = false
+	$Node/AudioBackground.play()
+	# Ruta del archivo por lotes
+	var file_path = "start_api.bat"
+	var output_file_path = "output.txt"
 	
+
+	# Ejecutar el archivo por lotes
+	var output = []
+	var error = []
+	#var result = OS.execute("cmd.exe", ["/c", file_path + " > " + output_file_path + " 2>&1"], output, true, true)
+
+	#print("Result: ", result)
+	
+	# Leer el contenido del archivo de salida
+	'''if FileAccess.file_exists(output_file_path):
+		var file = FileAccess.open(output_file_path, FileAccess.READ)
+		if file:
+			var output_content = file.get_as_text()
+			print("Output Content:\n", output_content)
+			file.close()
+		else:
+			print("Error al abrir el archivo de salida.")
+	else:
+		print("El archivo de salida no existe.")'''
+
 	
 
 func _on_start_pressed():
@@ -79,3 +103,6 @@ func _on_http_create_request_completed(_result, response_code, _headers, body):
 		
 		$ColorRect/greetings.visible = true
 		$ColorRect/greetings.text = "Ocurrio un error"
+
+
+

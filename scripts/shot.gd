@@ -9,7 +9,7 @@ func _ready():
 	
 	
 func _process(delta):
-	global_position.x += SPEED * delta * direction.x
+	global_position += SPEED * delta * direction
 	
 	
 func _on_area_entered(area):

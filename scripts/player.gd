@@ -5,6 +5,8 @@ class_name Player
 var is_on_ground : bool = false
 var is_climbing : bool = false
 var death : bool = false
+var shot_spawn : Vector2
+var can_shot : bool = true
 
 
 @export_category("Config")
@@ -38,16 +40,27 @@ func _input(event):
 		jump_ctrl(1)
 	if event.is_action_pressed("ui_select"):
 		shoot_ctrl()
+	if is_on_ground and Input.is_action_just_pressed("ui_right") or Input.is_action_just_pressed("ui_left"):
+		$allien/settings/Audio_fstps.play()
+	if Input.is_action_just_released("ui_right") or Input.is_action_just_released("ui_left"):
+		$allien/settings/Audio_fstps.stop()
+	if Input.is_action_pressed("ui_focus_next"):
+		focus()
 		
 
 func shoot_ctrl():
-	$allien/AnimatedSprite2D.play("fire")
-	$audio_fire.play()
-	var shoot_instance = shoot.instantiate()
-	shoot_instance.global_position = $allien/Marker2D.global_position
-	shoot_instance.scale.x = GLOBAL.direction
-	shoot_instance.direction = Vector2(GLOBAL.direction, 0)
-	get_tree().call_group("Environment", "add_child", shoot_instance)
+	if can_shot:
+		$allien/AnimatedSprite2D.play("fire")
+		$allien/settings/audio_fire.play()
+		var shoot_instance = shoot.instantiate()
+		shoot_instance.global_position = $allien/Marker2D.global_position
+		shoot_instance.scale = $shotSpawn.scale
+		shoot_instance.rotation = $shotSpawn.rotation
+		var direction = (Vector2(cos($shotSpawn.rotation), sin($shotSpawn.rotation))) * $shotSpawn.scale.x
+		shoot_instance.direction = direction
+		can_shot = false
+		get_tree().call_group("Environment", "add_child", shoot_instance)
+		$allien/settings/Timer.start()
 
 
 func jump_ctrl(power: float) -> void:
@@ -60,12 +73,10 @@ func motion_ctrl() -> void:
 		climb()
 	elif not GLOBAL.get_axis().x == 0:
 		$allien.scale.x = GLOBAL.get_axis().x
+		$shotSpawn.scale.x = GLOBAL.get_axis().x
 			
 	velocity.x = GLOBAL.get_axis().x * speed
 	velocity.y += gravity
-	if not is_on_ground :
-		pass
-		velocity.x = velocity.x / 2
 	move_and_slide()
 	
 	
@@ -77,11 +88,13 @@ func motion_ctrl() -> void:
 					if not GLOBAL.get_axis().x == 0:
 						$allien.set_animation("walk")
 						$allien.play()
+						
 					else:
 						$allien.set_animation("idle")
 				false:
 					if velocity.y < 0:
 						$allien.set_animation("jump_up")
+						$allien/settings/Audio_jump.play()
 					else:
 						$allien.set_animation("jump_down")
 						if is_on_ground:
@@ -104,11 +117,31 @@ func climb():
 	velocity.y = GLOBAL.get_axis().y * -speed
 	move_and_slide()
 
-
+func focus():
+	match $shotSpawn.scale.x == 1:
+		true:
+			if $shotSpawn.rotation > -1.5:
+				$allien/AnimatedSprite2D.rotation -= 0.5
+				$shotSpawn.rotation -= 0.5
+			else:
+				$shotSpawn.rotation = 0
+				$allien/AnimatedSprite2D.rotation = 0
+		false:
+			if $shotSpawn.rotation < 1.5:
+				$allien/AnimatedSprite2D.rotation -= 0.5
+				$shotSpawn.rotation += 0.5
+				print(str($shotSpawn.rotation))
+			else:
+				$shotSpawn.rotation = 0
+				$allien/AnimatedSprite2D.rotation = 0
+	shot_spawn = $shotSpawn.global_position - $allien/Marker2D.global_position
+		
+		
 func landing():
 	$allien.set_animation("landing")
 	
 func damage_ctrl():
+	$allien/settings/Audio_dmg.play()
 	GLOBAL.health -= 1
 	if GLOBAL.health <= 0:
 		death = true
@@ -133,3 +166,7 @@ func _on_allien_animation_finished():
 	if $allien.animation == "death":
 		gui.game_over()
 
+
+
+func _on_timer_timeout():
+	can_shot = true

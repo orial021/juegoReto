@@ -31,6 +31,7 @@ func motion_ctrl() -> void:
 
 func damage_ctrl(damage):
 	health -= damage
+	$Settings/AudioHit.play()
 	if health <= 0:
 		$sprite.set_animation("death")
 		$sprite.play()
