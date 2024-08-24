@@ -3,9 +3,9 @@ from psycopg2 import sql
 
 # Conexión a PostgreSQL
 conn = psycopg2.connect(
-    dbname="postgres",
-    user="tu_usuario",
-    password="tu_contraseña",
+    dbname="juegoReto",
+    user="postgres",
+    password="2354",
     host="localhost",
     port="5432"
 )
