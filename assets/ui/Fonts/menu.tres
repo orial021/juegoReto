@@ -1,0 +1,8 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://cxq8wir4cfx51"]
+
+[ext_resource type="FontFile" uid="uid://dv8b7krfg0u0m" path="res://assets/ui/Fonts/kenvector_future.ttf" id="1_qjfhw"]
+
+[resource]
+Button/fonts/font = ExtResource("1_qjfhw")
+Label/fonts/font = null
+LineEdit/fonts/font = null

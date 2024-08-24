@@ -56,7 +56,7 @@ speed = 50
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_qao7s")
-animation = &"death"
+animation = &"worm"
 autoplay = "worm"
 
 [node name="AreaDamage" type="Area2D" parent="sprite"]

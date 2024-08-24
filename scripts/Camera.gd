@@ -1,10 +1,10 @@
 extends Camera2D
 
+# Categoría de exportación para la configuración
 @export_category("Config")
 
-@export_group("Required Refrences")
+# Grupo de exportación para referencias requeridas
+@export_group("Required References")
 @export var player : CharacterBody2D
 
 
-func _proccess(_delta):
-	global_position = player.global_position

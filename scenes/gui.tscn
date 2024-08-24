@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://di3o7xkphsebp"]
+[gd_scene load_steps=3 format=3 uid="uid://di3o7xkphsebp"]
 
 [ext_resource type="Script" path="res://scripts/gui.gd" id="1_yoyyu"]
+[ext_resource type="Theme" uid="uid://cxq8wir4cfx51" path="res://assets/ui/Fonts/menu.tres" id="2_rcg35"]
 
 [node name="GUI" type="CanvasLayer"]
 process_mode = 3
@@ -12,6 +13,7 @@ offset_left = 304.0
 offset_top = 141.0
 offset_right = 848.0
 offset_bottom = 449.0
+theme = ExtResource("2_rcg35")
 color = Color(0.360784, 0.368627, 0.266667, 1)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="GameOver"]
@@ -45,22 +47,32 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 40
 text = "SALIR"
 
-[node name="health" type="Label" parent="."]
-offset_left = 26.0
-offset_top = 19.0
-offset_right = 182.0
-offset_bottom = 88.0
-theme_override_font_sizes/font_size = 50
-text = "health"
+[node name="HBoxContainer" type="MarginContainer" parent="."]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 5.0
+offset_right = -5.0
+offset_bottom = 69.0
+grow_horizontal = 2
+theme = ExtResource("2_rcg35")
 
-[node name="score" type="Label" parent="."]
-offset_left = 813.0
-offset_top = 23.0
-offset_right = 944.0
-offset_bottom = 92.0
-size_flags_horizontal = 8
+[node name="username" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 50
-text = "score"
+
+[node name="health" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 50
+
+[node name="score" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 50
 horizontal_alignment = 1
 vertical_alignment = 1
 

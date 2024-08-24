@@ -52,6 +52,17 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": ExtResource("6_gbv64")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_su5x1")
+}],
+"loop": false,
+"name": &"hurt",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": ExtResource("4_su5x1")
 }],
 "loop": false,
@@ -145,10 +156,12 @@ autoplay = "fire"
 [node name="audio_fire" type="AudioStreamPlayer2D" parent="allien/settings"]
 stream = ExtResource("14_7k1op")
 volume_db = -10.0
+max_distance = 5000.0
 area_mask = 63
 
 [node name="Audio_dmg" type="AudioStreamPlayer2D" parent="allien/settings"]
 stream = ExtResource("16_wuefs")
+max_distance = 5000.0
 
 [node name="Audio_fstps" type="AudioStreamPlayer2D" parent="allien/settings"]
 stream = ExtResource("17_cyakc")
@@ -158,8 +171,12 @@ area_mask = 63
 
 [node name="Audio_jump" type="AudioStreamPlayer2D" parent="allien/settings"]
 stream = ExtResource("18_ghluu")
+max_distance = 5000.0
 
 [node name="Timer" type="Timer" parent="allien/settings"]
+
+[node name="Timer2" type="Timer" parent="allien/settings"]
+one_shot = true
 
 [node name="CollisionShapePlayer" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_te6je")
@@ -186,4 +203,4 @@ shape = SubResource("CircleShape2D_bkexm")
 
 [connection signal="animation_finished" from="allien" to="." method="_on_allien_animation_finished"]
 [connection signal="timeout" from="allien/settings/Timer" to="." method="_on_timer_timeout"]
-[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="timeout" from="allien/settings/Timer2" to="." method="_on_timer_2_timeout"]
